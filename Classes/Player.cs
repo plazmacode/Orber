@@ -71,6 +71,11 @@ namespace Orber
                 {
                     velocity += new Vector2(1, 0);
                 }
+
+                if (velocity != Vector2.Zero)
+                {
+                    velocity.Normalize();
+                }
             }
         }
 
@@ -133,7 +138,6 @@ namespace Orber
                     mouse.LeftButton == ButtonState.Released &&
                     collisionBox.Contains(GameWorld.MouseStateProp.Position))
             {
-                Debug.WriteLine("clicked!");
                 if (isAutoMoving)
                 {
                     isAutoMoving = false;

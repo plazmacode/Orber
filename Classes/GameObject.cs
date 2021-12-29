@@ -28,7 +28,7 @@ namespace Orber
         /// The position of the object
         /// <para>For pathfinding use the screenPosition</para>
         /// </summary>
-        public Vector2 Position { get => position; }
+        public Vector2 Position { get => position; set => position = value; }
         /// <summary>
         /// The Screen position is different dependent on the object.
         /// <para>Lootable screenposition uses the RoomBuilder.Room for different positioning</para>

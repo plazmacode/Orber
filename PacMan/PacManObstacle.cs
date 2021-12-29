@@ -11,10 +11,11 @@ namespace Orber.PacMan
     {
         public PacManObstacle(Vector2 position, Texture2D sprite)
         {
-            this.position = position;
             this.sprite = sprite;
+            this.position = position;
             layerDepth = 0.2f;
             scale = 1f;
+
         }
 
         public override void LoadContent(ContentManager content)

@@ -63,7 +63,9 @@ namespace Orber
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (RoomBuilder.Room.Contains(collisionBox))
+            Rectangle col = collisionBox;
+            col.Inflate(-sprite.Width, -sprite.Height);
+            if (RoomBuilder.Room.Contains(col))
             {
                 spriteBatch.Draw(sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
             }
@@ -124,10 +126,10 @@ namespace Orber
         {
             SetRarity();
             int spawnPoint = random.Next(0, 4);
-            int rngWidth = random.Next(0,RoomBuilder.Room.Width);
-            int rngHeight = random.Next(0, RoomBuilder.Room.Height);
+            int rngWidth = random.Next(25, RoomBuilder.Room.Width -25);
+            int rngHeight = random.Next(25, RoomBuilder.Room.Height -25);
 
-            switch (spawnPoint)
+            switch (spawnPoint) //Top left is 0, 0
             {
                 case 0: //top
                     position = new Vector2(rngWidth - sprite.Width / 2, 50 - sprite.Height / 2);

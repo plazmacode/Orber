@@ -10,9 +10,9 @@ namespace Orber.PacMan
     public static class PacMan
     {
         private static Vector2 pacManOffset;
+        private static Rectangle pacManArea;
         private static Texture2D obstacleSprite;
         private static Texture2D pointSprite;
-        private static Texture2D playerSprite;
 
         private static char[,] level = new char[5, 5] {
             { 'o','o','o','o','o' },
@@ -22,35 +22,43 @@ namespace Orber.PacMan
             { 'o','o','o','o','o' }
         };
 
+        public static Rectangle PacManArea { get => pacManArea; set => pacManArea = value; }
+        public static char[,] Level { get => level; set => level = value; }
+        public static Vector2 PacManOffset { get => pacManOffset; set => pacManOffset = value; }
+
         static PacMan()
         {
-            pacManOffset = new Vector2(0,250);
+            PacManOffset = new Vector2(0, 250);
+            PacManArea = new Rectangle((int)PacManOffset.X, (int)PacManOffset.Y, 32 * Level.GetLength(0), 32 * Level.GetLength(1));
         }
 
         public static void LoadContent(ContentManager content)
         {
             obstacleSprite = content.Load<Texture2D>("PacManObstacle");
-            pointSprite = content.Load<Texture2D>("PacManPoint");
-            playerSprite = content.Load<Texture2D>("PacMan");
+            pointSprite = content.Load<Texture2D>("crate0");
         }
 
         public static void DrawLevel()
         {
-            for (int i = 0; i < level.GetLength(1); i++) //array height
+            for (int i = 0; i < Level.GetLength(1); i++) //array height
             {
-                for (int j = 0; j < level.GetLength(0); j++) // Array width
+                for (int j = 0; j < Level.GetLength(0); j++) // Array width
                 {
-                    if (level[j, i] == 'o')
+                    if (Level[j, i] == 'o')
                     {
-                        GameWorld.Instantiate(new PacManObstacle(new Vector2(32 * i+pacManOffset.X, 32 * j+pacManOffset.Y), obstacleSprite));
+                        GameWorld.Instantiate(new PacManObstacle(new Vector2(32 * i+PacManOffset.X, 32 * j+PacManOffset.Y), obstacleSprite));
                     }
-                    else if (level[j, i] == 'p')
+                    else if (Level[j, i] == 'p')
                     {
-                        GameWorld.Instantiate(new PacManPoint(new Vector2(32 * i + pacManOffset.X, 32 * j + pacManOffset.Y), pointSprite));
+                        GameWorld.Instantiate(new PacManPoint(new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y), pointSprite));
                     }
-                    else if (level[j, i] == 's')
+                    else if (Level[j, i] == 's')
                     {
-                        GameWorld.Instantiate(new PacManPlayer(new Vector2(32 * i + pacManOffset.X, 32 * j + pacManOffset.Y), playerSprite));
+                        GameWorld.PacManPlayerProp.Position = new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y);
+                        GameWorld.GameObjectsProp.Add(GameWorld.PacManPlayerProp);
+                        GameWorld.PacManPlayerProp.PlayerLevelPosition[0] = i;
+                        GameWorld.PacManPlayerProp.PlayerLevelPosition[1] = j;
+
                     }
                 }
             }

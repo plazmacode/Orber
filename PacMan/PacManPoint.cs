@@ -17,6 +17,11 @@ namespace Orber.PacMan
             scale = 1f;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            collisionBox = new Rectangle((int)position.X - (int)origin.X, (int)position.Y - (int)origin.Y, sprite.Width, sprite.Height);
+        }
+
         public override void LoadContent(ContentManager content)
         {
 

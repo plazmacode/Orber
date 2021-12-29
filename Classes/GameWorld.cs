@@ -36,6 +36,8 @@ namespace Orber
         private SoundEffectInstance backgroundMusic;
 
         private static Player player = new Player();
+        private static PacManPlayer pacManPlayer = new PacManPlayer();
+
 
         /// <summary>
         /// Moves with the player. Draws everything else in relation to this
@@ -57,6 +59,7 @@ namespace Orber
         public static List<string> DebugTexts { get => debugTexts; }
         public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; }
         public static List<UIElement> UIListProp { get => UIList; set => UIList = value; }
+        public static PacManPlayer PacManPlayerProp { get => pacManPlayer; set => pacManPlayer = value; }
 
         public GameWorld()
         {
@@ -223,7 +226,8 @@ namespace Orber
                 _spriteBatch.DrawString(Arial, RoomBuilder.LootableList[0].Rarity, new Vector2(mouseState.X + 20, mouseState.Y + 10), Color.White);
             }
 
-            //DebugText constantly updates
+            //
+            //constantly updates
             for (int i = 0; i < DebugTexts.Count; i++)
             {
                 _spriteBatch.DrawString(Arial, DebugTexts[i], new Vector2(0, 524+i*24), Color.Gray);
@@ -273,7 +277,7 @@ namespace Orber
             collisionBox.X = collisionBox.X - (int)CameraPositionProp.X + (int)ScreenSizeProp.X / 2;
             collisionBox.Y = collisionBox.Y - (int)CameraPositionProp.Y + (int)ScreenSizeProp.Y / 2;
 
-            DrawBox(collisionBox, Color.DarkGray, 10);
+            DrawBox(collisionBox, Color.DarkGray, 5);
         }
 
         /// <summary>
