@@ -88,7 +88,7 @@ namespace Orber
             {
                 Rarity = "white";
             }
-            else if (crateRNG < 760) //76%
+            else if (crateRNG < 1000) //76%
             {
                 Rarity = "gray";
             }
@@ -112,6 +112,7 @@ namespace Orber
                     break;
                 default:
                     sprite = sprites[4]; //ERROR
+                    rarity = "Error" + crateRNG.ToString();
                     GameWorld.DebugTexts.Add("ERROR SPRITE MISSING RARITY: " + crateRNG.ToString());
                     break;
             }
@@ -141,7 +142,6 @@ namespace Orber
                 default:
                     break;
             }
-            Debug.WriteLine(position);
         }
 
         public override void OnCollision(GameObject other)

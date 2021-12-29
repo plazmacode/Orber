@@ -25,6 +25,7 @@ namespace Orber
         private static List<string> debugTexts = new List<string>();
 
         private static Vector2 screenSize;
+        private static Vector2 oldScreenSize;
         private static Vector2 cameraPosition = new Vector2(800, 450);
 
         private SoundEffectInstance backgroundMusic;
@@ -69,7 +70,12 @@ namespace Orber
         /// <param name="e"></param>
         public void OnResize(Object sender, EventArgs e)
         {
+            oldScreenSize = screenSize;
             screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+
+            //Keeps player position correct(cameraPosition)
+            cameraPosition.X += screenSize.X/2 - oldScreenSize.X/2;
+            cameraPosition.Y += screenSize.Y/2 - oldScreenSize.Y/2;
 
             //Updates position of UI elements after window Resize;
             foreach (GameObject gameObject in gameObjects)
