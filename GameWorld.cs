@@ -127,10 +127,7 @@ namespace Orber
 
             mouseState = Mouse.GetState();
             keyState = Keyboard.GetState();
-#if DEBUG
-            debugTexts.Add("OldScreen:" + oldScreenSize.ToString());
-            debugTexts.Add("screenSize:" + screenSize.ToString());
-#endif
+
             OrbSystem.Update(gameTime);
 
             gameObjects.AddRange(newGameObjects);

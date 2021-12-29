@@ -15,7 +15,7 @@ namespace Orber
         private float autoLootSpeed = 0.2f;
         private float lootX;
         private float lootY;
-
+        private MouseState oldState;
         public Player()
         {
             layerDepth = 0.4f;
@@ -43,8 +43,6 @@ namespace Orber
             HandleInput();
             Move(gameTime);
             AutoMove(gameTime);
-            GameWorld.DebugTexts.Add("CameraPosition: " + GameWorld.CameraPositionProp.X.ToString() + ": " + GameWorld.CameraPositionProp.Y);
-            GameWorld.DebugTexts.Add("Lootable: " + lootX.ToString() + ": " + lootY.ToString());
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -125,6 +123,24 @@ namespace Orber
         /// <param name="gameTime"></param>
         private void AutoMove(GameTime gameTime)
         {
+            MouseState mouse = Mouse.GetState();
+            //Switch automove on click on player
+            if (
+                    oldState.LeftButton == ButtonState.Pressed &&
+                    mouse.LeftButton == ButtonState.Released &&
+                    collisionBox.Contains(GameWorld.MouseStateProp.Position))
+            {
+                Debug.WriteLine("clicked!");
+                if (isAutoMoving)
+                {
+                    isAutoMoving = false;
+                }
+                else if(!isAutoMoving)
+                {
+                    isAutoMoving = true;
+                }
+            }
+            oldState = mouse;
             if (isAutoMoving)
             {
                 lootX = RoomBuilder.LootableList[0].ScreenPosition.X;

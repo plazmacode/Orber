@@ -10,14 +10,11 @@ namespace Orber
 {
     public class UIElement : GameObject
     {
-        /// <summary>
-        /// fuck
-        /// </summary>
         private string name;
         private string type;
         private string color;
         private Rectangle rect;
-        MouseState oldState;
+        private static MouseState oldState;
 
 
         public UIElement(string name, string type, Vector2 position)
