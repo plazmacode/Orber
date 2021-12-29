@@ -21,7 +21,7 @@ namespace Orber
             layerDepth = 0.4f;
             scale = 1f;
             speed = 400;
-            isAutoMoving = true;
+            isAutoMoving = false;
         }
 
         public override void LoadContent(ContentManager content)
