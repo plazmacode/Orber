@@ -12,7 +12,7 @@ namespace Orber
     {
         private static Rectangle room;
         private static Vector2 roomSize = new Vector2(800, 800);
-        private static Vector2 roomOffset = new Vector2(roomSize.X/2, -(roomSize.Y/2));
+        private static Vector2 roomOffset = new Vector2(RoomSize.X/2, -(RoomSize.Y/2));
 
         private static Texture2D backgroundImage;
         private static Texture2D[] crateSprites = new Texture2D[5];
@@ -22,6 +22,7 @@ namespace Orber
         public static Rectangle Room { get => room; }
         public static Vector2 RoomOffset { get => roomOffset; set => roomOffset = value; }
         public static List<Lootable> LootableList { get => lootableList; set => lootableList = value; }
+        public static Vector2 RoomSize { get => roomSize; set => roomSize = value; }
 
         public static void LoadContent(ContentManager content)
         {
@@ -45,12 +46,20 @@ namespace Orber
             room = new Rectangle(
                 (int)GameWorld.ScreenSizeProp.X / 2 - (int)roomOffset.X,
                 (int)GameWorld.ScreenSizeProp.Y / 2 + (int)roomOffset.Y,
-                (int)roomSize.X, (int)roomSize.Y);
+                (int)RoomSize.X, (int)RoomSize.Y);
 
             Lootable lootable = new Lootable(crateSprites);
 
             LootableList.Add(lootable);
             GameWorld.Instantiate(lootable); //Adds to GameWorld
+        }
+
+        public static void ReloadRoom(string seed)
+        {
+            room = new Rectangle(
+                (int)GameWorld.ScreenSizeProp.X / 2 - (int)roomOffset.X,
+                (int)GameWorld.ScreenSizeProp.Y / 2 + (int)roomOffset.Y,
+                (int)RoomSize.X, (int)RoomSize.Y);
         }
 
         /// <summary>

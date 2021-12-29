@@ -62,16 +62,27 @@ namespace Orber
             Window.ClientSizeChanged += OnResize;
         }
 
+        /// <summary>
+        /// Updates various variables on system resize
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnResize(Object sender, EventArgs e)
         {
             screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+
+            //Updates position of UI elements after window Resize;
             foreach (GameObject gameObject in gameObjects)
             {
                 if (gameObject is UIElement)
                 {
-
+                    //Updates the position of UI elements by calling the method of the subclass from the superclass
+                    gameObject.GetType().InvokeMember("UpdatePosition", System.Reflection.BindingFlags.InvokeMethod, null, gameObject, null);
                 }
             }
+
+            //Updates room position
+            RoomBuilder.ReloadRoom("noSeedImplemented");
         }
 
         protected override void Initialize()
@@ -149,7 +160,7 @@ namespace Orber
 #endif
             }
 
-            //DrawWorldBoundary(RoomBuilder.Room);
+            DrawWorldBoundary(RoomBuilder.Room);
 
             //Draw stats string
             for (int i = 0; i < OrbSystem.TotalStatsString.Count; i++)
