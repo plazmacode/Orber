@@ -53,21 +53,24 @@ namespace Orber
         private void HandleInput()
         {
             velocity = Vector2.Zero;
-            if (GameWorld.KeyStateProp.IsKeyDown(Keys.W))
+            if (RoomBuilder.Room.Contains(GameWorld.MouseStateProp.Position))
             {
-                velocity += new Vector2(0, -1);
-            }
-            if (GameWorld.KeyStateProp.IsKeyDown(Keys.S))
-            {
-                velocity += new Vector2(0, 1);
-            }
-            if (GameWorld.KeyStateProp.IsKeyDown(Keys.A))
-            {
-                velocity += new Vector2(-1, 0);
-            }
-            if (GameWorld.KeyStateProp.IsKeyDown(Keys.D))
-            {
-                velocity += new Vector2(1, 0);
+                if (GameWorld.KeyStateProp.IsKeyDown(Keys.W))
+                {
+                    velocity += new Vector2(0, -1);
+                }
+                if (GameWorld.KeyStateProp.IsKeyDown(Keys.S))
+                {
+                    velocity += new Vector2(0, 1);
+                }
+                if (GameWorld.KeyStateProp.IsKeyDown(Keys.A))
+                {
+                    velocity += new Vector2(-1, 0);
+                }
+                if (GameWorld.KeyStateProp.IsKeyDown(Keys.D))
+                {
+                    velocity += new Vector2(1, 0);
+                }
             }
         }
 

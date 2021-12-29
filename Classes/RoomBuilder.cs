@@ -11,7 +11,7 @@ namespace Orber
     static class RoomBuilder
     {
         private static Rectangle room;
-        private static Vector2 roomSize = new Vector2(800, 800);
+        private static Vector2 roomSize = new Vector2(200, 200);
         private static Vector2 roomOffset = new Vector2(RoomSize.X/2, -(RoomSize.Y/2));
 
         private static Texture2D backgroundImage;
@@ -52,6 +52,8 @@ namespace Orber
 
             LootableList.Add(lootable);
             GameWorld.Instantiate(lootable); //Adds to GameWorld
+            OrbSystem.Orbs[0] = 100;
+            OrbSystem.Orbs[1] = 100;
         }
 
         public static void ReloadRoom(string seed)

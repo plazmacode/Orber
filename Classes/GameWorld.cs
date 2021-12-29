@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orber.PacMan;
 
 namespace Orber
 {
@@ -17,11 +18,15 @@ namespace Orber
         private static KeyboardState keyState;
 
         private Texture2D collisionTexture;
+        private FrameCounter _frameCounter = new FrameCounter();
 
         // Static fields allow the Instatiate and Destroy methods to be static
         private static List<GameObject> gameObjects = new List<GameObject>();
         private static List<GameObject> newGameObjects = new List<GameObject>();
         private static List<GameObject> removeGameObjects = new List<GameObject>();
+
+        private static List<UIElement> UIList = new List<UIElement>();
+
         private static List<string> debugTexts = new List<string>();
 
         private static Vector2 screenSize;
@@ -50,6 +55,8 @@ namespace Orber
         public static SpriteFont Arial { get => arial; }
         public static KeyboardState KeyStateProp { get => keyState; }
         public static List<string> DebugTexts { get => debugTexts; }
+        public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; }
+        public static List<UIElement> UIListProp { get => UIList; set => UIList = value; }
 
         public GameWorld()
         {
@@ -61,6 +68,8 @@ namespace Orber
             screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
+            //_graphics.SynchronizeWithVerticalRetrace = false; Unlocks FPS
+            //this.IsFixedTimeStep = false;
         }
 
         /// <summary>
@@ -78,13 +87,10 @@ namespace Orber
             cameraPosition.Y += screenSize.Y/2 - oldScreenSize.Y/2;
 
             //Updates position of UI elements after window Resize;
-            foreach (GameObject gameObject in gameObjects)
+            foreach (UIElement ui in UIList)
             {
-                if (gameObject is UIElement)
-                {
-                    //Updates the position of UI elements by calling the method of the subclass from the superclass
-                    gameObject.GetType().InvokeMember("UpdatePosition", System.Reflection.BindingFlags.InvokeMethod, null, gameObject, null);
-                }
+                //Updates the position of UI elements by calling the method of the subclass from the superclass
+                ui.GetType().InvokeMember("UpdatePosition", System.Reflection.BindingFlags.InvokeMethod, null, ui, null);
             }
 
             //Updates room position
@@ -93,12 +99,17 @@ namespace Orber
 
         protected override void Initialize()
         {
-            gameObjects.Add(new UIElement("Make White Orbs", "button", new Vector2(screenSize.X - 200, 0)));
-            gameObjects.Add(new UIElement("Make Blue Orbs", "button", new Vector2(screenSize.X - 200, 24)));
-            gameObjects.Add(new UIElement("Make Yellow Orbs", "button", new Vector2(screenSize.X - 200, 48)));
-            gameObjects.Add(new UIElement("Make Orange Orbs", "button", new Vector2(screenSize.X - 200, 72)));
+            arial = Content.Load<SpriteFont>("arial");
+
+            UIList.Add(new UIElement("Make White Orbs", "button"));
+            UIList.Add(new UIElement("Make Blue Orbs", "button"));
+            UIList.Add(new UIElement("Make Yellow Orbs", "button"));
+            UIList.Add(new UIElement("Make Orange Orbs", "button"));
 
             gameObjects.Add(PlayerProp);
+
+            PacMan.PacMan.LoadContent(Content);
+            PacMan.PacMan.DrawLevel();
 
             base.Initialize();
         }
@@ -107,7 +118,6 @@ namespace Orber
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            arial = Content.Load<SpriteFont>("arial");
 
             collisionTexture = Content.Load<Texture2D>("collisionTexture");
 
@@ -128,8 +138,12 @@ namespace Orber
             mouseState = Mouse.GetState();
             keyState = Keyboard.GetState();
 
+            UIHandler.Update(gameTime);
             OrbSystem.Update(gameTime);
-
+            foreach (UIElement ui in UIList)
+            {
+                ui.Update(gameTime);
+            }
             gameObjects.AddRange(newGameObjects);
             newGameObjects.Clear();
 
@@ -158,6 +172,21 @@ namespace Orber
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);   // Makes layers work
 
+            _frameCounter.Update(gameTime);
+
+            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+            _spriteBatch.DrawString(Arial, fps, new Vector2(0, screenSize.Y -24), Color.White);
+            _spriteBatch.DrawString(GameWorld.Arial, mouseState.Position.ToString(), new Vector2(0, screenSize.Y-48), Color.White);
+
+            foreach (UIElement ui in UIList)
+            {
+                ui.Draw(_spriteBatch);
+
+#if DEBUG
+                DrawCollisionBox(ui.CollisionBoxProp);
+#endif
+            }
+
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Draw(_spriteBatch);
@@ -166,6 +195,9 @@ namespace Orber
 #endif
             }
 
+#if DEBUG
+            DrawCollisionBox(RoomBuilder.Room); //TODO: make this prettier
+#endif
             DrawWorldBoundary(RoomBuilder.Room);
 
             //Draw stats string
@@ -198,7 +230,6 @@ namespace Orber
             }
             GameWorld.DebugTexts.Clear();
 
-            _spriteBatch.DrawString(GameWorld.Arial, mouseState.Position.ToString(), new Vector2(0, screenSize.Y-24), Color.White);
 
             _spriteBatch.End();
 

@@ -8,9 +8,8 @@ namespace Orber
     public static class OrbSystem
     {
         private static int[] orbs = new int[5];
-
-        private static int[] orbSpeed = new int[5] { 1, 0, 0, 0, 0}; //Gain orbs every orbSpeed seconds.
-        private static double[] nextOrbTime = new double[5]; //Time until next orb.
+        private static int[] orbSpeed = new int[5] { 1, 10, 100, 1000, 10000 }; //Gain orbs every orbSpeed seconds.
+        private static double[] nextOrbTime = new double[5] { 1000, 10000, 100000, 1000000, 10000000 }; //Time until next orb.
         private static double[] remainingOrbTime = new double[5];
 
         private static List<string> totalStatsString = new List<string>();
@@ -24,11 +23,32 @@ namespace Orber
         public static void Update(GameTime gameTime)
         {
             UpdateStatsString();
+            //remainingOrbTime[0] = Math.Round(nextOrbTime[0] - gameTime.TotalGameTime.TotalMilliseconds);
+            //if (nextOrbTime[0] <= gameTime.TotalGameTime.TotalMilliseconds)
+            //{
+            //    orbs[0]++;
+            //    nextOrbTime[0] = gameTime.TotalGameTime.TotalMilliseconds + orbSpeed[0]*1000;
+            //}
+            //The gray orbs are always acquired
             remainingOrbTime[0] = Math.Round(nextOrbTime[0] - gameTime.TotalGameTime.TotalMilliseconds);
             if (nextOrbTime[0] <= gameTime.TotalGameTime.TotalMilliseconds)
             {
                 orbs[0]++;
-                nextOrbTime[0] = gameTime.TotalGameTime.TotalMilliseconds + orbSpeed[0]*1000;
+                nextOrbTime[0] = gameTime.TotalGameTime.TotalMilliseconds + orbSpeed[0] * 1000;
+            }
+
+            //All rarer orbs recquire the you to unlock the one after.
+            for (int i = 1; i < orbs.Length - 1; i++)
+            {
+                if (orbs[i + 1] > 0)
+                {
+                    remainingOrbTime[i] = Math.Round(nextOrbTime[i] - gameTime.TotalGameTime.TotalMilliseconds);
+                    if (nextOrbTime[i] <= gameTime.TotalGameTime.TotalMilliseconds)
+                    {
+                        orbs[i]++;
+                        nextOrbTime[i] = gameTime.TotalGameTime.TotalMilliseconds + orbSpeed[i] * 1000;
+                    }
+                }
             }
         }
 

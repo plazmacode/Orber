@@ -63,7 +63,10 @@ namespace Orber
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            if (RoomBuilder.Room.Contains(collisionBox))
+            {
+                spriteBatch.Draw(sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            }
         }
 
         /// <summary>
@@ -72,7 +75,6 @@ namespace Orber
         private void SetRarity()
         {
             crateRNG = random.Next(0, 1000);
-
             if (crateRNG < 1) // 0.1%
             {
                 Rarity = "orange";
