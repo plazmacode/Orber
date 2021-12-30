@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orber.CBT
+namespace Orber
 {
-    class CBTPlayer : CBTCharacter
+    public class CBTPlayer : CBTCharacter
     {
         public CBTPlayer()
         {
@@ -20,7 +20,7 @@ namespace Orber.CBT
             layerDepth = 0.3f;
             scale = 1f;
 
-            strength = 10f;
+            strength = 1f;
             baseMagicDamage = 50f;
             criticalChance = 0.01f;
             IsStunned = false;

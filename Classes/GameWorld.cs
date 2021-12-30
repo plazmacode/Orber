@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orber.PacMan;
-using Orber.CBT;
-
 namespace Orber
 {
     public class GameWorld : Game
@@ -106,6 +104,8 @@ namespace Orber
 
             //Updates room position
             RoomBuilder.ReloadRoom("noSeedImplemented");
+            //Updates Arena
+            Orber.CBT.ReloadArea();
         }
 
         protected override void Initialize()
@@ -126,8 +126,8 @@ namespace Orber
             //Orber.nameSpace.StaticClass
             Orber.PacMan.PacMan.LoadContent(Content); //PacMan loads the sprites for other objects, it is a static, so it has to be done in initialize()
             Orber.PacMan.PacMan.DrawLevel();
-            Orber.CBT.CBT.LoadContent(Content);
-            Orber.CBT.CBT.CreateArena();
+            Orber.CBT.LoadContent(Content);
+            Orber.CBT.CreateArena();
 
             base.Initialize();
         }
@@ -242,6 +242,7 @@ namespace Orber
 
 #if DEBUG
             DrawCollisionBox(RoomBuilder.RoomScreenRect); //TODO: make this prettier
+            DrawCollisionBox(Orber.CBT.CBTAreaProp);
 #endif
             DrawDungeon();
 

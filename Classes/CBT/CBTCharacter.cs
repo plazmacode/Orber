@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orber.CBT
+namespace Orber
 {
-    abstract class CBTCharacter : GameObject
+    public abstract class CBTCharacter : GameObject
     {
         protected float maxHealth;
         protected float maxStamina;

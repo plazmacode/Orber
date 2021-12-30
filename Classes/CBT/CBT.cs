@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orber.CBT
+namespace Orber
 {
     /// <summary>
     /// Turn-based combat? Combat Based on Turns!!!
@@ -13,6 +13,7 @@ namespace Orber.CBT
     public static class CBT
     {
         private static CBTPlayer CBTPlayer = new CBTPlayer();
+        private static CBTEnemy CBTEnemy = new CBTEnemy();
         private static Vector2 CBTOffset;
         private static Rectangle CBTArea;
         private static Texture2D playerSprite;
@@ -20,7 +21,22 @@ namespace Orber.CBT
         private static Vector2 playerPosition;
         private static Vector2 enemyPosition;
 
-        internal static CBTPlayer CBTPlayerProp { get => CBTPlayer; set => CBTPlayer = value; }
+        public static CBTPlayer CBTPlayerProp { get => CBTPlayer; set => CBTPlayer = value; }
+        public static CBTEnemy CBTEnemyProp { get => CBTEnemy; set => CBTEnemy = value; }
+        public static Vector2 CBTOffsetProp { get => CBTOffset; set => CBTOffset = value; }
+        public static Rectangle CBTAreaProp { get => CBTArea; set => CBTArea = value; }
+
+        static CBT() //???? 🥺static CBT🥺 ????
+        {
+            CBTOffsetProp = new Vector2(150, GameWorld.ScreenSizeProp.Y - 300);
+            CBTAreaProp = new Rectangle((int)CBTOffsetProp.X, (int)CBTOffsetProp.Y, 800, 300);
+        }
+
+        public static void ReloadArea() //Reloads offsets
+        {
+            CBTOffsetProp = new Vector2(150, GameWorld.ScreenSizeProp.Y - 300);
+            CBTAreaProp = new Rectangle((int)CBTOffsetProp.X, (int)CBTOffsetProp.Y, 800, 300);
+        }
 
         public static void LoadContent(ContentManager content)
         {
@@ -29,9 +45,10 @@ namespace Orber.CBT
 
         public static void CreateArena()
         {
-            playerPosition = new Vector2(50, 50);
+            playerPosition = new Vector2(CBTOffset.X, CBTOffset.Y+CBTArea.Height - CBTPlayerProp.Sprite.Height); //initial position of player
             CBTPlayerProp.Position = playerPosition;
             GameWorld.CBTProp.Instantiate(CBTPlayerProp);
+            GameWorld.CBTProp.Instantiate(CBTEnemyProp);
         }
 
     }

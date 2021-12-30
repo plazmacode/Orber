@@ -10,12 +10,16 @@ namespace Orber
     public class GameArea
     {
         private string name;
+        private static Vector2 offset;
+        private static Rectangle areaRect;
 
         private  List<GameObject> gameObjects = new List<GameObject>();
         private  List<GameObject> removeGameObjects = new List<GameObject>();
         private  List<GameObject> newGameObjects = new List<GameObject>();
 
         public List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; }
+        public static Vector2 Offset { get => offset; set => offset = value; }
+        public static Rectangle AreaRect { get => areaRect; set => areaRect = value; }
 
         public void LoadContent(ContentManager content)
         {
