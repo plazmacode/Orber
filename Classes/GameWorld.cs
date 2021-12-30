@@ -175,8 +175,7 @@ namespace Orber
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);   // Makes layers work
 
-            _frameCounter.Update(gameTime);
-
+            _frameCounter.Update(gameTime)
             var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
             _spriteBatch.DrawString(Arial, fps, new Vector2(0, screenSize.Y -24), Color.White,
                 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
