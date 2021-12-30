@@ -62,7 +62,7 @@ namespace Orber
         public static SpriteFont Arial { get => arial; }
         public static KeyboardState KeyStateProp { get => keyState; }
         public static List<string> DebugTexts { get => debugTexts; }
-        public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; }
+        public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; } //DELETE?
         public static List<UIElement> UIListProp { get => UIList; set => UIList = value; }
         public static PacManPlayer PacManPlayerProp { get => pacManPlayer; set => pacManPlayer = value; }
         public static GameArea Dungeon { get => dungeon; set => dungeon = value; }
@@ -78,12 +78,12 @@ namespace Orber
             screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
-            //_graphics.SynchronizeWithVerticalRetrace = false; Unlocks FPS
+            //_graphics.SynchronizeWithVerticalRetrace = false; //Unlocks FPS
             //this.IsFixedTimeStep = false;
         }
 
         /// <summary>
-        /// Updates various variables on system resize
+        /// Updates various variables on system resize, used for correct positioning after resize
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

@@ -108,8 +108,8 @@ namespace Orber.PacMan
         {
             if (other is PacManPoint)
             {
-                GameWorld.Destroy(other); //replace with respawn command, use system.reflection
-                OrbSystem.Orbs[4]++;
+                GameWorld.PacMan.Destroy(other); //replace with respawn command, use system.reflection
+                OrbSystem.Orbs[0]++;
             }
         }
         public override void Draw(SpriteBatch spriteBatch)

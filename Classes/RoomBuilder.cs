@@ -70,8 +70,6 @@ namespace Orber
 
             LootableList.Add(lootable);
             GameWorld.Dungeon.Instantiate(lootable); //Adds to GameWorld
-            OrbSystem.Orbs[0] = 100;
-            OrbSystem.Orbs[1] = 100;
         }
 
         public static void ReloadRoom(string seed)

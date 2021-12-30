@@ -47,11 +47,21 @@ namespace Orber
             HandleInput();
             Move(gameTime);
             AutoMove(gameTime);
+            ShowDistance();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(sprite, position, null, Color.White, 0, origin, scale, SpriteEffects.None, layerDepth);
+        }
+
+        private void ShowDistance()
+        {
+            //update distance variable
+            lootX = RoomBuilder.LootableList[0].ScreenPosition.X;
+            lootY = RoomBuilder.LootableList[0].ScreenPosition.Y;
+            lootDistance = Vector2.Distance(new Vector2(lootX, lootY), Position);
+            lootDistance = (float)Math.Round(LootDistance);
         }
 
         private void HandleInput()
@@ -163,13 +173,6 @@ namespace Orber
 
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 GameWorld.CameraPositionProp += velocity * speed * autoLootSpeed * deltaTime;
-
-                //update distance variable
-                double query = Math.Pow(position.X - position.Y, 2) + Math.Pow(lootX - lootY, 2);
-                LootDistance = 450 - (float)Math.Sqrt(query); //TODO: fix lootDistance precision
-
-                //GameWorld.DebugTexts.Add(position.ToString());
-                //GameWorld.DebugTexts.Add(lootX.ToString() + ": " + lootY.ToString());
             }
         }
     }
