@@ -25,7 +25,7 @@ namespace Orber
 
             this.pickupRange = 20;
             scale = 1f;
-            layerDepth = 0.4f;
+            layerDepth = 0.1f;
             Spawn();
         }
 
@@ -38,7 +38,7 @@ namespace Orber
             
             this.pickupRange = 20;
             scale = 1f;
-            layerDepth = 0.4f;
+            layerDepth = 0.1f;
             Spawn();
         }
 
@@ -50,7 +50,7 @@ namespace Orber
         public override void Update(GameTime gameTime)
         {
             screenPosition = position - GameWorld.CameraPositionProp + GameWorld.ScreenSizeProp + new Vector2(-RoomBuilder.Room.Width / 2, RoomBuilder.RoomOffset.Y);
-            collisionBox = new Rectangle((int)screenPosition.X - (int)origin.X, (int)screenPosition.Y - (int)origin.Y, sprite.Width, sprite.Height);
+            collisionBox = new Rectangle((int)screenPosition.X - (int)origin.X, (int)screenPosition.Y - (int)origin.Y, Sprite.Width, Sprite.Height);
 
 
             GameWorld.DebugTexts.Add("CrateRNG: " + crateRNG.ToString());
@@ -63,7 +63,12 @@ namespace Orber
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            Rectangle col = collisionBox;
+            col.Inflate(-Sprite.Width, -Sprite.Height);
+            if (RoomBuilder.Room.Contains(col))
+            {
+                spriteBatch.Draw(Sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            }
         }
 
         /// <summary>
@@ -72,7 +77,6 @@ namespace Orber
         private void SetRarity()
         {
             crateRNG = random.Next(0, 1000);
-
             if (crateRNG < 1) // 0.1%
             {
                 Rarity = "orange";
@@ -96,22 +100,22 @@ namespace Orber
             switch (Rarity)
             {
                 case "gray":
-                    sprite = sprites[0];
+                    Sprite = sprites[0];
                     break;
                 case "white":
-                    sprite = sprites[1];
+                    Sprite = sprites[1];
                     break;
                 case "blue":
-                    sprite = sprites[2];
+                    Sprite = sprites[2];
                     break;
                 case "yellow":
-                    sprite = sprites[3];
+                    Sprite = sprites[3];
                     break;
                 case "orange":
-                    sprite = sprites[4];
+                    Sprite = sprites[4];
                     break;
                 default:
-                    sprite = sprites[4]; //ERROR
+                    Sprite = sprites[4]; //ERROR
                     rarity = "Error" + crateRNG.ToString();
                     GameWorld.DebugTexts.Add("ERROR SPRITE MISSING RARITY: " + crateRNG.ToString());
                     break;
@@ -122,22 +126,22 @@ namespace Orber
         {
             SetRarity();
             int spawnPoint = random.Next(0, 4);
-            int rngWidth = random.Next(0,RoomBuilder.Room.Width);
-            int rngHeight = random.Next(0, RoomBuilder.Room.Height);
+            int rngWidth = random.Next(25, RoomBuilder.Room.Width -25);
+            int rngHeight = random.Next(25, RoomBuilder.Room.Height -25);
 
-            switch (spawnPoint)
+            switch (spawnPoint) //Top left is 0, 0
             {
                 case 0: //top
-                    position = new Vector2(rngWidth - sprite.Width / 2, 50 - sprite.Height / 2);
+                    position = new Vector2(rngWidth - Sprite.Width / 2, 50 - Sprite.Height / 2);
                     break;
                 case 1: //bottom
-                    position = new Vector2(rngWidth - sprite.Width / 2, RoomBuilder.Room.Height - 50 - sprite.Height / 2);
+                    position = new Vector2(rngWidth - Sprite.Width / 2, RoomBuilder.Room.Height - 50 - Sprite.Height / 2);
                     break;
                 case 2: //left
-                    position = new Vector2(50 - sprite.Width / 2, rngHeight - sprite.Height / 2);
+                    position = new Vector2(50 - Sprite.Width / 2, rngHeight - Sprite.Height / 2);
                     break;
                 case 3: //right
-                    position = new Vector2(RoomBuilder.Room.Width - 50 - sprite.Width / 2, rngHeight - sprite.Height / 2);
+                    position = new Vector2(RoomBuilder.Room.Width - 50 - Sprite.Width / 2, rngHeight - Sprite.Height / 2);
                     break;
                 default:
                     break;
