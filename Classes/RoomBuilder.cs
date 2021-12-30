@@ -74,10 +74,18 @@ namespace Orber
 
         public static void ReloadRoom(string seed)
         {
+            roomOffset = new Vector2(RoomSize.X / 2, -(RoomSize.Y / 2));
+            roomScreenOffset = new Vector2(RoomScreenSize.X / 2, -(RoomScreenSize.Y / 2));
+
             room = new Rectangle(
                 (int)GameWorld.ScreenSizeProp.X / 2 - (int)roomOffset.X,
                 (int)GameWorld.ScreenSizeProp.Y / 2 + (int)roomOffset.Y,
                 (int)RoomSize.X, (int)RoomSize.Y);
+
+            roomScreenRect = new Rectangle(
+                (int)GameWorld.ScreenSizeProp.X / 2 - (int)roomScreenOffset.X,
+                (int)GameWorld.ScreenSizeProp.Y / 2 + (int)roomScreenOffset.Y,
+                (int)RoomScreenSize.X, (int)RoomScreenSize.Y);
         }
 
         /// <summary>

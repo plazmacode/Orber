@@ -282,6 +282,17 @@ namespace Orber
 
         private void DrawDungeon()
         {
+            //Resize the screen
+            if (RoomBuilder.RoomScreenRect.Contains(mouseState.X, mouseState.Y))
+            {
+                RoomBuilder.RoomScreenSize = new Vector2(600, 600);
+                RoomBuilder.ReloadRoom("noSeedImplemented");
+            }
+            else
+            {
+                RoomBuilder.RoomScreenSize = new Vector2(200, 200);
+                RoomBuilder.ReloadRoom("noSeedImplemented");
+            }
             DrawDungeonBoundary(RoomBuilder.Room);
 
             //Erase stuff outside dungeon game room
