@@ -6,24 +6,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orber.PacMan;
+using Orber.Classes;
 
 namespace Orber
 {
     public class GameWorld : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private static SpriteBatch _spriteBatch;
         private static SpriteFont arial;
         private static MouseState mouseState;
         private static KeyboardState keyState;
 
-        private Texture2D collisionTexture;
+        private static Texture2D collisionTexture;
         private FrameCounter _frameCounter = new FrameCounter();
 
-        // Static fields allow the Instatiate and Destroy methods to be static
-        private static List<GameObject> gameObjects = new List<GameObject>();
-        private static List<GameObject> newGameObjects = new List<GameObject>();
-        private static List<GameObject> removeGameObjects = new List<GameObject>();
+        private static List<GameArea> gameAreas = new List<GameArea>();
+
+        private static List<GameObject> gameObjects = new List<GameObject>(); //DELETE?
+        private static List<GameObject> newGameObjects = new List<GameObject>(); //DELETE?
+        private static List<GameObject> removeGameObjects = new List<GameObject>(); //DELETE?
 
         private static List<UIElement> UIList = new List<UIElement>();
 
@@ -34,6 +36,9 @@ namespace Orber
         private static Vector2 cameraPosition = new Vector2(800, 450);
 
         private SoundEffectInstance backgroundMusic;
+
+        private static GameArea dungeon = new GameArea();
+        private static GameArea pacMan = new GameArea();
 
         private static Player player = new Player();
         private static PacManPlayer pacManPlayer = new PacManPlayer();
@@ -60,6 +65,8 @@ namespace Orber
         public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; }
         public static List<UIElement> UIListProp { get => UIList; set => UIList = value; }
         public static PacManPlayer PacManPlayerProp { get => pacManPlayer; set => pacManPlayer = value; }
+        public static GameArea Dungeon { get => dungeon; set => dungeon = value; }
+        public static GameArea PacMan { get => pacMan; set => pacMan = value; }
 
         public GameWorld()
         {
@@ -109,10 +116,13 @@ namespace Orber
             UIList.Add(new UIElement("Make Yellow Orbs", "button"));
             UIList.Add(new UIElement("Make Orange Orbs", "button"));
 
-            gameObjects.Add(PlayerProp);
+            gameAreas.Add(Dungeon);
+            gameAreas.Add(PacMan);
 
-            PacMan.PacMan.LoadContent(Content);
-            PacMan.PacMan.DrawLevel();
+            Dungeon.GameObjectsProp.Add(PlayerProp);
+
+            Orber.PacMan.PacMan.LoadContent(Content);
+            Orber.PacMan.PacMan.DrawLevel();
 
             base.Initialize();
         }
@@ -126,6 +136,11 @@ namespace Orber
 
             RoomBuilder.LoadContent(Content);
             RoomBuilder.GenerateRoom("TODO,make rooms seed based");
+
+            foreach (GameArea gameArea in gameAreas)
+            {
+                gameArea.LoadContent(Content);
+            }
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -150,6 +165,11 @@ namespace Orber
             gameObjects.AddRange(newGameObjects);
             newGameObjects.Clear();
 
+            foreach (GameArea gameArea in gameAreas)
+            {
+                gameArea.Update(gameTime);
+            }
+
             foreach (GameObject gameObject in removeGameObjects)
             {
                 gameObjects.Remove(gameObject);
@@ -159,6 +179,7 @@ namespace Orber
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Update(gameTime);
+                debugTexts.Add(gameObject.ToString());
                 foreach (GameObject other in gameObjects)
                 {
                     gameObject.CheckCollision(other);
@@ -175,7 +196,7 @@ namespace Orber
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);   // Makes layers work
 
-            _frameCounter.Update(gameTime)
+            _frameCounter.Update(gameTime);
             var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
             _spriteBatch.DrawString(Arial, fps, new Vector2(0, screenSize.Y -24), Color.White,
                 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
@@ -189,6 +210,11 @@ namespace Orber
 #if DEBUG
                 DrawCollisionBox(ui.CollisionBoxProp);
 #endif
+            }
+
+            foreach (GameArea gameArea in gameAreas)
+            {
+                gameArea.Draw(_spriteBatch);
             }
 
             foreach (GameObject gameObject in gameObjects)
@@ -297,7 +323,7 @@ namespace Orber
         /// <summary>
         /// Runs the DrawBox code with the given Rectangle from its parameter
         /// </summary>
-        private void DrawCollisionBox(Rectangle rect)
+        public static void DrawCollisionBox(Rectangle rect)
         {
             DrawBox(rect, Color.Red, 1);
         }
@@ -328,7 +354,7 @@ namespace Orber
         /// <summary>
         /// Generic method for drawing a box around a rectangle.
         /// </summary>
-        private void DrawBox(Rectangle rect, Color color, int lineWidth)
+        public static void DrawBox(Rectangle rect, Color color, int lineWidth)
         {
             Rectangle topLine = new Rectangle(rect.X, rect.Y, rect.Width, lineWidth);
             Rectangle bottomLine = new Rectangle(rect.X, rect.Y + rect.Height, rect.Width, lineWidth);

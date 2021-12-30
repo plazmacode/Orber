@@ -69,7 +69,7 @@ namespace Orber
             Lootable lootable = new Lootable(crateSprites);
 
             LootableList.Add(lootable);
-            GameWorld.Instantiate(lootable); //Adds to GameWorld
+            GameWorld.Dungeon.Instantiate(lootable); //Adds to GameWorld
             OrbSystem.Orbs[0] = 100;
             OrbSystem.Orbs[1] = 100;
         }

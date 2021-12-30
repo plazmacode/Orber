@@ -46,16 +46,16 @@ namespace Orber.PacMan
                 {
                     if (Level[j, i] == 'o')
                     {
-                        GameWorld.Instantiate(new PacManObstacle(new Vector2(32 * i+PacManOffset.X, 32 * j+PacManOffset.Y), obstacleSprite));
+                        GameWorld.PacMan.Instantiate(new PacManObstacle(new Vector2(32 * i+PacManOffset.X, 32 * j+PacManOffset.Y), obstacleSprite));
                     }
                     else if (Level[j, i] == 'p')
                     {
-                        GameWorld.Instantiate(new PacManPoint(new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y), pointSprite));
+                        GameWorld.PacMan.Instantiate(new PacManPoint(new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y), pointSprite));
                     }
                     else if (Level[j, i] == 's')
                     {
                         GameWorld.PacManPlayerProp.Position = new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y);
-                        GameWorld.GameObjectsProp.Add(GameWorld.PacManPlayerProp);
+                        GameWorld.PacMan.GameObjectsProp.Add(GameWorld.PacManPlayerProp);
                         GameWorld.PacManPlayerProp.PlayerLevelPosition[0] = i;
                         GameWorld.PacManPlayerProp.PlayerLevelPosition[1] = j;
 
