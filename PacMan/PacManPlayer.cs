@@ -29,7 +29,7 @@ namespace Orber.PacMan
         public override void Update(GameTime gameTime)
         {
             screenPosition = position - GameWorld.CameraPositionProp;
-            collisionBox = new Rectangle((int)position.X - (int)origin.X, (int)position.Y - (int)origin.Y, sprite.Width, sprite.Height);
+            collisionBox = new Rectangle((int)position.X - (int)origin.X, (int)position.Y - (int)origin.Y, Sprite.Width, Sprite.Height);
             HandleInput(gameTime);
             Move(gameTime);
         }
@@ -101,7 +101,7 @@ namespace Orber.PacMan
 
         public override void LoadContent(ContentManager content)
         {
-            sprite = content.Load<Texture2D>("PacMan");
+            Sprite = content.Load<Texture2D>("PacMan");
         }
 
         public override void OnCollision(GameObject other)
@@ -114,7 +114,7 @@ namespace Orber.PacMan
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, position, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(Sprite, position, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
         }
     }
 }

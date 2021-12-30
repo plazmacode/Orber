@@ -178,8 +178,10 @@ namespace Orber
             _frameCounter.Update(gameTime);
 
             var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
-            _spriteBatch.DrawString(Arial, fps, new Vector2(0, screenSize.Y -24), Color.White);
-            _spriteBatch.DrawString(GameWorld.Arial, mouseState.Position.ToString(), new Vector2(0, screenSize.Y-48), Color.White);
+            _spriteBatch.DrawString(Arial, fps, new Vector2(0, screenSize.Y -24), Color.White,
+                0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
+            _spriteBatch.DrawString(GameWorld.Arial, mouseState.Position.ToString(), new Vector2(0, screenSize.Y-48), Color.White,
+                0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
 
             foreach (UIElement ui in UIList)
             {
@@ -194,19 +196,31 @@ namespace Orber
             {
                 gameObject.Draw(_spriteBatch);
 #if DEBUG
-                DrawCollisionBox(gameObject.CollisionBoxProp);
+                if (gameObject is Lootable)
+                {
+                    Rectangle col = gameObject.CollisionBoxProp;
+                    col.Inflate(-gameObject.Sprite.Width, -gameObject.Sprite.Height);
+                    if (RoomBuilder.RoomScreenRect.Contains(col))
+                    {
+                        DrawCollisionBox(gameObject.CollisionBoxProp);
+                    }
+                } else
+                {
+                    DrawCollisionBox(gameObject.CollisionBoxProp);
+                }
 #endif
             }
 
 #if DEBUG
-            DrawCollisionBox(RoomBuilder.Room); //TODO: make this prettier
+            DrawCollisionBox(RoomBuilder.RoomScreenRect); //TODO: make this prettier
 #endif
-            DrawWorldBoundary(RoomBuilder.Room);
+            DrawDungeon();
 
             //Draw stats string
             for (int i = 0; i < OrbSystem.TotalStatsString.Count; i++)
             {
-                _spriteBatch.DrawString(Arial, OrbSystem.TotalStatsString[i], new Vector2(0, i * 24), Color.White);
+                _spriteBatch.DrawString(Arial, OrbSystem.TotalStatsString[i], new Vector2(0, i * 24), Color.White,
+                    0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
             }
 
             //Draw hover stats string
@@ -216,21 +230,22 @@ namespace Orber
                 Rectangle text = new Rectangle(0, i * 24, (int)textSize.X, (int)textSize.Y);
                 if (text.Contains(mouseState.X, mouseState.Y))
                 {
-                    _spriteBatch.DrawString(Arial, OrbSystem.TotalStatsHover[i], new Vector2(mouseState.X + 20, mouseState.Y + 10), Color.White);
+                    _spriteBatch.DrawString(Arial, OrbSystem.TotalStatsHover[i], new Vector2(mouseState.X + 20, mouseState.Y + 10),
+                        Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
                 }
             }
 
             //Draw hover stats for loot
             if (RoomBuilder.LootableList[0].CollisionBoxProp.Contains(mouseState.X, mouseState.Y))
             {
-                _spriteBatch.DrawString(Arial, RoomBuilder.LootableList[0].Rarity, new Vector2(mouseState.X + 20, mouseState.Y + 10), Color.White);
+                _spriteBatch.DrawString(Arial, RoomBuilder.LootableList[0].Rarity, new Vector2(mouseState.X + 20, mouseState.Y + 10),
+                    Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
             }
 
-            //
-            //constantly updates
+            //Draw extra debug texts
             for (int i = 0; i < DebugTexts.Count; i++)
             {
-                _spriteBatch.DrawString(Arial, DebugTexts[i], new Vector2(0, 524+i*24), Color.Gray);
+                _spriteBatch.DrawString(Arial, DebugTexts[i], new Vector2(0, 524+i*24), Color.Gray, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
             }
             GameWorld.DebugTexts.Clear();
 
@@ -238,6 +253,28 @@ namespace Orber
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void DrawDungeon()
+        {
+            DrawDungeonBoundary(RoomBuilder.Room);
+
+            //Erase stuff outside dungeon game room
+            Rectangle topEraser = new Rectangle(0, 0, (int)screenSize.X, RoomBuilder.RoomScreenRect.Top);
+            Rectangle bottomEraser = new Rectangle(0, RoomBuilder.RoomScreenRect.Bottom, (int)screenSize.X, (int)screenSize.Y);
+            Rectangle leftEraser = new Rectangle(0, 0, RoomBuilder.RoomScreenRect.Left, (int)screenSize.Y);
+            Rectangle rightEraser = new Rectangle(RoomBuilder.RoomScreenRect.Right, 0, (int)screenSize.X, (int)screenSize.Y);
+            _spriteBatch.Draw(collisionTexture, topEraser, null, Color.Black, 0, Vector2.Zero, SpriteEffects.None, 0.2f);
+            _spriteBatch.Draw(collisionTexture, bottomEraser, null, Color.Black, 0, Vector2.Zero, SpriteEffects.None, 0.2f);
+            _spriteBatch.Draw(collisionTexture, leftEraser, null, Color.Black, 0, Vector2.Zero, SpriteEffects.None, 0.2f);
+            _spriteBatch.Draw(collisionTexture, rightEraser, null, Color.Black, 0, Vector2.Zero, SpriteEffects.None, 0.2f);
+
+            //Hover over play to show distance to loot
+            if (PlayerProp.CollisionBoxProp.Contains(mouseState.X, mouseState.Y))
+            {
+                _spriteBatch.DrawString(Arial, "Dist: " + PlayerProp.LootDistance.ToString(), new Vector2(mouseState.X + 10, mouseState.Y + 10),
+                    Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
+            }
         }
 
         /// <summary>
@@ -270,14 +307,23 @@ namespace Orber
         /// Draws the World Boundary in DarkGray colour.
         /// </summary>
         /// <param name="rect">Worldsize</param>
-        private void DrawWorldBoundary(Rectangle rect)
+        private void DrawDungeonBoundary(Rectangle rect)
         {
-            Rectangle collisionBox = rect;
+            int lineWidth = 5;
+            Color color = Color.DarkGray;
 
-            collisionBox.X = collisionBox.X - (int)CameraPositionProp.X + (int)ScreenSizeProp.X / 2;
-            collisionBox.Y = collisionBox.Y - (int)CameraPositionProp.Y + (int)ScreenSizeProp.Y / 2;
+            rect.X = rect.X - (int)CameraPositionProp.X + (int)ScreenSizeProp.X / 2;
+            rect.Y = rect.Y - (int)CameraPositionProp.Y + (int)ScreenSizeProp.Y / 2;
 
-            DrawBox(collisionBox, Color.DarkGray, 5);
+            Rectangle topLine = new Rectangle(rect.X, rect.Y, rect.Width, lineWidth);
+            Rectangle bottomLine = new Rectangle(rect.X, rect.Y + rect.Height, rect.Width, lineWidth);
+            Rectangle rightLine = new Rectangle(rect.X + rect.Width, rect.Y, lineWidth, rect.Height + lineWidth);
+            Rectangle leftLine = new Rectangle(rect.X, rect.Y, lineWidth, rect.Height);
+
+            _spriteBatch.Draw(collisionTexture, topLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.1f);
+            _spriteBatch.Draw(collisionTexture, bottomLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.1f);
+            _spriteBatch.Draw(collisionTexture, rightLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.1f);
+            _spriteBatch.Draw(collisionTexture, leftLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.1f);
         }
 
         /// <summary>
@@ -290,10 +336,10 @@ namespace Orber
             Rectangle rightLine = new Rectangle(rect.X + rect.Width, rect.Y, lineWidth, rect.Height + lineWidth);
             Rectangle leftLine = new Rectangle(rect.X, rect.Y, lineWidth, rect.Height);
 
-            _spriteBatch.Draw(collisionTexture, topLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
-            _spriteBatch.Draw(collisionTexture, bottomLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
-            _spriteBatch.Draw(collisionTexture, rightLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
-            _spriteBatch.Draw(collisionTexture, leftLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
+            _spriteBatch.Draw(collisionTexture, topLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+            _spriteBatch.Draw(collisionTexture, bottomLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+            _spriteBatch.Draw(collisionTexture, rightLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+            _spriteBatch.Draw(collisionTexture, leftLine, null, color, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
         }
     }
 }

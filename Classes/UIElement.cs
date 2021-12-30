@@ -34,7 +34,7 @@ namespace Orber
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(GameWorld.Arial, name, position, Color.White);
+            spriteBatch.DrawString(GameWorld.Arial, name, position, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
         }
 
         public void UpdatePosition()

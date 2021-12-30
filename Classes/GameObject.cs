@@ -36,18 +36,19 @@ namespace Orber
         public Vector2 ScreenPosition { get => screenPosition; set => screenPosition = value; }
 
         public virtual Rectangle CollisionBoxProp { get => collisionBox; }
+        public Texture2D Sprite { get => sprite; set => sprite = value; }
 
         public abstract void LoadContent(ContentManager content);
 
         public virtual void Update(GameTime gameTime)
         {
             screenPosition = position - GameWorld.CameraPositionProp;
-            collisionBox = new Rectangle((int)screenPosition.X - (int)origin.X, (int)screenPosition.Y - (int)origin.Y, sprite.Width, sprite.Height);
+            collisionBox = new Rectangle((int)screenPosition.X - (int)origin.X, (int)screenPosition.Y - (int)origin.Y, Sprite.Width, Sprite.Height);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(Sprite, screenPosition, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Orber
         
         protected virtual void CreateOrigin()
         {
-            origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
+            origin = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
         }
 
     }

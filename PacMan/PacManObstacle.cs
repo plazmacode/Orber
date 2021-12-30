@@ -11,9 +11,9 @@ namespace Orber.PacMan
     {
         public PacManObstacle(Vector2 position, Texture2D sprite)
         {
-            this.sprite = sprite;
+            this.Sprite = sprite;
             this.position = position;
-            layerDepth = 0.2f;
+            layerDepth = 0.3f;
             scale = 1f;
 
         }
@@ -30,7 +30,7 @@ namespace Orber.PacMan
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, position, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(Sprite, position, null, Color.White, rotation, origin, scale, SpriteEffects.None, layerDepth);
         }
     }
 }
