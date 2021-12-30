@@ -13,6 +13,7 @@ namespace Orber.PacMan
         private static Rectangle pacManArea;
         private static Texture2D obstacleSprite;
         private static Texture2D pointSprite;
+        private static PacManPlayer pacManPlayer = new PacManPlayer();
 
         private static char[,] level = new char[5, 5] {
             { 'o','o','o','o','o' },
@@ -25,6 +26,7 @@ namespace Orber.PacMan
         public static Rectangle PacManArea { get => pacManArea; set => pacManArea = value; }
         public static char[,] Level { get => level; set => level = value; }
         public static Vector2 PacManOffset { get => pacManOffset; set => pacManOffset = value; }
+        public static PacManPlayer PacManPlayerProp { get => pacManPlayer; set => pacManPlayer = value; }
 
         static PacMan()
         {
@@ -54,10 +56,10 @@ namespace Orber.PacMan
                     }
                     else if (Level[j, i] == 's')
                     {
-                        GameWorld.PacManPlayerProp.Position = new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y);
-                        GameWorld.PacMan.GameObjectsProp.Add(GameWorld.PacManPlayerProp);
-                        GameWorld.PacManPlayerProp.PlayerLevelPosition[0] = i;
-                        GameWorld.PacManPlayerProp.PlayerLevelPosition[1] = j;
+                        PacManPlayerProp.Position = new Vector2(32 * i + PacManOffset.X, 32 * j + PacManOffset.Y);
+                        GameWorld.PacMan.GameObjectsProp.Add(PacManPlayerProp);
+                        PacManPlayerProp.PlayerLevelPosition[0] = i;
+                        PacManPlayerProp.PlayerLevelPosition[1] = j;
 
                     }
                 }

@@ -28,7 +28,6 @@ namespace Orber.PacMan
 
         public override void Update(GameTime gameTime)
         {
-            screenPosition = position - GameWorld.CameraPositionProp;
             collisionBox = new Rectangle((int)position.X - (int)origin.X, (int)position.Y - (int)origin.Y, Sprite.Width, Sprite.Height);
             HandleInput(gameTime);
             Move(gameTime);
@@ -37,8 +36,8 @@ namespace Orber.PacMan
         public void Move(GameTime gameTime)
         {
             isCollided = false;
-            int newX = (int)(GameWorld.PacManPlayerProp.playerLevelPosition[0] + velocity.X);
-            int newY = (int)(GameWorld.PacManPlayerProp.playerLevelPosition[1] + velocity.Y);
+            int newX = (int)(PacMan.PacManPlayerProp.playerLevelPosition[0] + velocity.X);
+            int newY = (int)(PacMan.PacManPlayerProp.playerLevelPosition[1] + velocity.Y);
 
 
             //Level Border collision
@@ -60,8 +59,8 @@ namespace Orber.PacMan
             //Move player
             if (!isCollided)
             {
-                GameWorld.PacManPlayerProp.playerLevelPosition[0] += (int)velocity.X;
-                GameWorld.PacManPlayerProp.playerLevelPosition[1] += (int)velocity.Y;
+                PacMan.PacManPlayerProp.playerLevelPosition[0] += (int)velocity.X;
+                PacMan.PacManPlayerProp.playerLevelPosition[1] += (int)velocity.Y;
                 position = new Vector2(32 * playerLevelPosition[0] + PacMan.PacManOffset.X, 32 * playerLevelPosition[1] + PacMan.PacManOffset.Y);
                 velocity = Vector2.Zero;
             }

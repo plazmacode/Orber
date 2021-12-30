@@ -67,7 +67,7 @@ namespace Orber
         private void HandleInput()
         {
             velocity = Vector2.Zero;
-            if (RoomBuilder.Room.Contains(GameWorld.MouseStateProp.Position))
+            if (RoomBuilder.RoomScreenRect.Contains(GameWorld.MouseStateProp.Position))
             {
                 if (GameWorld.KeyStateProp.IsKeyDown(Keys.W))
                 {

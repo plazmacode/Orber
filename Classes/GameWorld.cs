@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orber.PacMan;
-using Orber.Classes;
+using Orber.CBT;
 
 namespace Orber
 {
@@ -39,9 +39,9 @@ namespace Orber
 
         private static GameArea dungeon = new GameArea();
         private static GameArea pacMan = new GameArea();
+        private static GameArea CBT = new GameArea();
 
         private static Player player = new Player();
-        private static PacManPlayer pacManPlayer = new PacManPlayer();
 
 
         /// <summary>
@@ -64,9 +64,10 @@ namespace Orber
         public static List<string> DebugTexts { get => debugTexts; }
         public static List<GameObject> GameObjectsProp { get => gameObjects; set => gameObjects = value; } //DELETE?
         public static List<UIElement> UIListProp { get => UIList; set => UIList = value; }
-        public static PacManPlayer PacManPlayerProp { get => pacManPlayer; set => pacManPlayer = value; }
         public static GameArea Dungeon { get => dungeon; set => dungeon = value; }
         public static GameArea PacMan { get => pacMan; set => pacMan = value; }
+        public static GameArea CBTProp { get => CBT; set => CBT = value; }
+
 
         public GameWorld()
         {
@@ -118,11 +119,15 @@ namespace Orber
 
             gameAreas.Add(Dungeon);
             gameAreas.Add(PacMan);
+            gameAreas.Add(CBTProp);
 
             Dungeon.GameObjectsProp.Add(PlayerProp);
 
-            Orber.PacMan.PacMan.LoadContent(Content);
+            //Orber.nameSpace.StaticClass
+            Orber.PacMan.PacMan.LoadContent(Content); //PacMan loads the sprites for other objects, it is a static, so it has to be done in initialize()
             Orber.PacMan.PacMan.DrawLevel();
+            Orber.CBT.CBT.LoadContent(Content);
+            Orber.CBT.CBT.CreateArena();
 
             base.Initialize();
         }
@@ -130,7 +135,6 @@ namespace Orber
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
 
             collisionTexture = Content.Load<Texture2D>("collisionTexture");
 
