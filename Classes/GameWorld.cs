@@ -98,8 +98,8 @@ namespace Orber
             //Updates position of UI elements after window Resize;
             foreach (UIElement ui in UIList)
             {
-                //Updates the position of UI elements by calling the method of the subclass from the superclass
-                ui.GetType().InvokeMember("UpdatePosition", System.Reflection.BindingFlags.InvokeMethod, null, ui, null);
+                //Updates the position of UI elements
+                ui.UpdatePosition();
             }
 
             //Updates room position
